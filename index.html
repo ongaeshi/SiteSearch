@@ -45,6 +45,22 @@
                 const query = encodedSearchTerm + ' ' + encodeURIComponent(siteQueries);
                 return siteQueries ? `https://www.google.com/search?q=${query}` : '';
             }
+        },
+        mounted() {
+            // ローカルストレージからサイト情報を読み込む
+            const savedSites = JSON.parse(localStorage.getItem('sites'));
+            if (savedSites && Array.isArray(savedSites)) {
+                this.sites = savedSites;
+            }
+        },
+        watch: {
+            sites: {
+                handler(newSites) {
+                    // サイト情報が変更されたらローカルストレージに保存
+                    localStorage.setItem('sites', JSON.stringify(newSites));
+                },
+                deep: true // ネストされたオブジェクトの変更も監視
+            }
         }
     }).mount('#app');
 </script>
