@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>サイト絞り込み検索ツール</title>
+    <script>
+        window.onload = function() {
+            const sitesList = document.getElementById('sitesList');
+            for (let i = 1; i <= 4; i++) {
+                const listItem = document.createElement('li');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.id = 'includeSite' + i;
+                checkbox.checked = true;
+
+                const label = document.createElement('label');
+                label.htmlFor = 'site' + i;
+                label.textContent = 'サイト' + i + ':';
+
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.id = 'site' + i;
+
+                listItem.appendChild(checkbox);
+                listItem.appendChild(label);
+                listItem.appendChild(input);
+                sitesList.appendChild(listItem);
+            }
+        };
+
+        function generateSearchUrl() {
+            const searchTerm = document.getElementById('searchTerm').value;
+            const sites = [];
+            for (let i = 1; i <= 4; i++) {
+                if (document.getElementById('includeSite' + i).checked) {
+                    const site = document.getElementById('site' + i).value;
+                    if (site) {
+                        sites.push('site:' + site);
+                    }
+                }
+            }
+            const query = encodeURIComponent(searchTerm + ' ' + sites.join(' OR '));
+            const searchUrl = 'https://www.google.com/search?q=' + query;
+            document.getElementById('searchLink').href = searchUrl;
+            document.getElementById('searchLink').innerText = 'ここをクリックして検索: ' + searchTerm;
+            document.getElementById('searchLink').style.display = 'inline';
+        }
+    </script>
+</head>
+<body>
+    <h1>サイト絞り込み検索ツール</h1>
+    <div>
+        <label for="searchTerm">検索キーワード:</label>
+        <input type="text" id="searchTerm" />
+    </div>
+    <div>
+        <h2>絞り込み対象サイト</h2>
+        <ul id="sitesList">
+            <!-- JavaScriptでサイト入力フィールドが追加されます -->
+        </ul>
+    </div>
+    <div>
+        <button onclick="generateSearchUrl()">検索URLを生成</button>
+    </div>
+    <div>
+        <a id="searchLink" style="display: none;"></a>
+    </div>
+</body>
+</html>
